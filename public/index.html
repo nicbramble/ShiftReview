@@ -1,11 +1,10 @@
-
-
-
-
-    
-    
-    ShiftReview Demo - Push Notification Shift Reviews
-    
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShiftReview Demo - Push Notification Shift Reviews</title>
+    <style>
         * {
             margin: 0;
             padding: 0;
@@ -101,7 +100,6 @@
             transform: translateY(0);
         }
 
-        /* Simulated Push Notification */
         .notification {
             position: fixed;
             top: -200px;
@@ -164,7 +162,6 @@
             line-height: 1.4;
         }
 
-        /* Review Form */
         .review-form {
             display: none;
         }
@@ -253,7 +250,6 @@
             box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
         }
 
-        /* Success Message */
         .success-message {
             display: none;
             text-align: center;
@@ -277,15 +273,9 @@
         }
 
         @keyframes successPop {
-            0% {
-                transform: scale(0);
-            }
-            50% {
-                transform: scale(1.1);
-            }
-            100% {
-                transform: scale(1);
-            }
+            0% { transform: scale(0); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
         }
 
         .success-message h2 {
@@ -355,103 +345,84 @@
         }
 
         @media (max-width: 600px) {
-            .demo-header h1 {
-                font-size: 32px;
-            }
-            
-            .rating-btn {
-                width: 50px;
-                height: 50px;
-                font-size: 20px;
-            }
+            .demo-header h1 { font-size: 32px; }
+            .rating-btn { width: 50px; height: 50px; font-size: 20px; }
         }
-    
+    </style>
+</head>
+<body>
+    <div class="demo-header">
+        <h1>⚡ ShiftReview</h1>
+        <p class="tagline">Instant feedback after every shift</p>
+        <span class="demo-badge">🎬 INTERACTIVE DEMO</span>
+    </div>
 
-
-    
-        ⚡ ShiftReview
-        Instant feedback after every shift
-        🎬 INTERACTIVE DEMO
-    
-
-    
-        
-        
-            Try the Demo
-            Click the button below to simulate what happens when an employee's shift ends. You'll see a push notification appear!
-            
+    <div class="container">
+        <div class="demo-card demo-section" id="demoSection">
+            <h2>Try the Demo</h2>
+            <p>Click the button below to simulate what happens when an employee's shift ends. You'll see a push notification appear!</p>
+            <button class="trigger-btn" onclick="triggerNotification()">
                 🎯 End Shift & Send Notification
-            
-        
+            </button>
+        </div>
 
-        
-        
-            How was your shift?
-            Rate your experience and share feedback
+        <div class="demo-card review-form" id="reviewForm">
+            <h2>How was your shift?</h2>
+            <p style="margin-bottom: 30px;">Rate your experience and share feedback</p>
             
-            
+            <form onsubmit="submitReview(event)">
+                <div class="form-group">
+                    <label>Rating</label>
+                    <div class="rating-container">
+                        <button type="button" class="rating-btn" onclick="selectRating(1)">1</button>
+                        <button type="button" class="rating-btn" onclick="selectRating(2)">2</button>
+                        <button type="button" class="rating-btn" onclick="selectRating(3)">3</button>
+                        <button type="button" class="rating-btn" onclick="selectRating(4)">4</button>
+                        <button type="button" class="rating-btn" onclick="selectRating(5)">5</button>
+                    </div>
+                </div>
                 
-                    Rating
-                    
-                        1
-                        2
-                        3
-                        4
-                        5
-                    
+                <div class="form-group">
+                    <label>Comment (optional)</label>
+                    <textarea id="comment" placeholder="Tell us about your shift..."></textarea>
+                </div>
                 
-                
-                
-                    Comment (optional)
-                    
-                
-                
-                
-                    Submit Review ✓
-                
-            
-        
+                <button type="submit" class="submit-btn">Submit Review ✓</button>
+            </form>
+        </div>
 
-        
-        
-            ✓
-            Review Submitted!
-            Thank you for your feedback. Your review has been recorded.
-            Try Demo Again
-        
+        <div class="demo-card success-message" id="successMessage">
+            <div class="success-icon">✓</div>
+            <h2>Review Submitted!</h2>
+            <p>Thank you for your feedback. Your review has been recorded.</p>
+            <button class="reset-btn" onclick="resetDemo()">Try Demo Again</button>
+        </div>
 
-        
-        
-            📊 Demo Reviews Submitted
-            
-        
-    
+        <div class="stored-reviews" id="storedReviews" style="display: none;">
+            <h3>📊 Demo Reviews Submitted</h3>
+            <div id="reviewsList"></div>
+        </div>
+    </div>
 
-    
-    
-        
-            ⚡
-            ShiftReview
-            now
-        
-        Shift Complete!
-        How was your shift? Tap to share your feedback.
-    
+    <div class="notification" id="notification" onclick="openReviewForm()">
+        <div class="notification-header">
+            <div class="notification-icon">⚡</div>
+            <div class="notification-app">ShiftReview</div>
+            <div class="notification-time">now</div>
+        </div>
+        <div class="notification-title">Shift Complete!</div>
+        <div class="notification-body">How was your shift? Tap to share your feedback.</div>
+    </div>
 
-    
+    <script>
         let selectedRating = null;
         let reviews = [];
 
         function triggerNotification() {
-            // Hide demo section
             document.getElementById('demoSection').style.display = 'none';
-            
-            // Show notification after short delay
             setTimeout(() => {
                 const notification = document.getElementById('notification');
                 notification.classList.add('show');
-                
-                // Auto-hide after 5 seconds if not clicked
                 setTimeout(() => {
                     if (notification.classList.contains('show')) {
                         notification.classList.remove('show');
@@ -461,10 +432,7 @@
         }
 
         function openReviewForm() {
-            // Hide notification
             document.getElementById('notification').classList.remove('show');
-            
-            // Show review form
             setTimeout(() => {
                 document.getElementById('reviewForm').classList.add('active');
             }, 300);
@@ -472,8 +440,6 @@
 
         function selectRating(rating) {
             selectedRating = rating;
-            
-            // Update button states
             const buttons = document.querySelectorAll('.rating-btn');
             buttons.forEach((btn, index) => {
                 if (index + 1 === rating) {
@@ -486,26 +452,18 @@
 
         function submitReview(event) {
             event.preventDefault();
-            
             if (!selectedRating) {
                 alert('Please select a rating');
                 return;
             }
-
             const comment = document.getElementById('comment').value;
-            
-            // Store review
             const review = {
                 rating: selectedRating,
                 comment: comment,
                 timestamp: new Date().toLocaleString()
             };
             reviews.push(review);
-            
-            // Hide form
             document.getElementById('reviewForm').classList.remove('active');
-            
-            // Show success message
             setTimeout(() => {
                 document.getElementById('successMessage').classList.add('active');
                 updateReviewsList();
@@ -515,34 +473,29 @@
         function updateReviewsList() {
             const reviewsList = document.getElementById('reviewsList');
             const storedReviews = document.getElementById('storedReviews');
-            
             if (reviews.length > 0) {
                 storedReviews.style.display = 'block';
                 reviewsList.innerHTML = reviews.map(review => `
-                    
-                        ${'⭐'.repeat(review.rating)} ${review.rating}/5
-                        ${review.comment ? `"${review.comment}"` : ''}
-                        ${review.timestamp}
-                    
+                    <div class="review-item">
+                        <div class="review-rating">${'⭐'.repeat(review.rating)} ${review.rating}/5</div>
+                        ${review.comment ? `<div class="review-comment">"${review.comment}"</div>` : ''}
+                        <div class="review-time">${review.timestamp}</div>
+                    </div>
                 `).reverse().join('');
             }
         }
 
         function resetDemo() {
-            // Reset all states
             selectedRating = null;
             document.getElementById('comment').value = '';
             document.querySelectorAll('.rating-btn').forEach(btn => {
                 btn.classList.remove('selected');
             });
-            
-            // Hide success message
             document.getElementById('successMessage').classList.remove('active');
-            
-            // Show demo section again
             setTimeout(() => {
                 document.getElementById('demoSection').style.display = 'block';
             }, 300);
         }
-    
-
+    </script>
+</body>
+</html>
